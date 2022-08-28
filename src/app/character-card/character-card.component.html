@@ -1,0 +1,19 @@
+<mat-card class="card mat-elevation-z2">
+  <mat-card-header>
+    <mat-card-title>{{ char.name }}</mat-card-title>
+    <mat-card-subtitle
+      >{{ char.species }} |
+      <span [style.color]="setStatusColor(char.status)">{{ char.status }}</span>
+    </mat-card-subtitle>
+  </mat-card-header>
+  <img mat-card-image src="{{ char.image }}" alt="{{ char.name }}" />
+  <mat-card-content>
+    <p><strong> Origin:</strong> {{ char.origin['name'] }}</p>
+    <p><strong>Last known location:</strong> {{ char.location['name'] }}</p>
+  </mat-card-content>
+  <mat-card-actions>
+    <a (click)="openDialog(char)" mat-stroked-button color="primary"
+      >Episodes</a
+    >
+  </mat-card-actions>
+</mat-card>

@@ -1,0 +1,89 @@
+<div class="page-container">
+  <mat-toolbar>
+    <span>RICK AND MORTY WIKI</span>
+  </mat-toolbar>
+
+  <div class="search-filter">
+    <div class="filters">
+      <mat-form-field>
+        <mat-label>Search characters by name</mat-label>
+        <input
+          matInput
+          #search
+          (keyup)="searchTerm$.next(search.value)"
+          [formControl]="searchField"
+        />
+        <button
+          mat-button
+          *ngIf="search.value !== ''"
+          matSuffix
+          mat-icon-button
+          aria-label="Clear"
+          (click)="
+            search.value = ''; searchTerm$.next(search.value); status = ''
+          "
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+      <small class="no-character-found" *ngIf="resultsEmpty$ | async">
+        No character found for this search
+      </small>
+    </div>
+
+    <div class="filters">
+      <mat-form-field>
+        <mat-label>Filter</mat-label>
+        <mat-select
+          (selectionChange)="applyFilterFromDatabase($event)"
+          [(ngModel)]="status"
+        >
+          <mat-option [value]="''">Default</mat-option>
+          <mat-option
+            *ngFor="let status of ['dead', 'alive', 'unknow']"
+            [value]="status"
+          >
+            {{ status }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="filters">
+      <mat-form-field>
+        <mat-label>Order By</mat-label>
+        <mat-select (selectionChange)="reOrder()" [(ngModel)]="orderBy">
+          <mat-option [value]="''">Default</mat-option>
+          <mat-option
+            *ngFor="let orderBy of ['episode', 'name']"
+            [value]="orderBy"
+          >
+            {{ orderBy }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+  <!-- <div class="flex-container">
+    <mat-form-field>
+      <mat-label>Order Direction</mat-label>
+      <mat-radio-group aria-label="Select an option" (change)=""  [(ngModel)]="orderDir">
+        <mat-radio-button value="1">Option 1</mat-radio-button>
+        <mat-radio-button value="2">Option 2</mat-radio-button>
+      </mat-radio-group>
+    </mat-form-field>
+  </div> -->
+  <div class="container">
+    <app-character-card
+      (response)="updateResponse($event)"
+      [char]="char"
+      *ngFor="let char of characters$ | async"
+    ></app-character-card>
+  </div>
+  <mat-paginator
+    [length]="resultsLength"
+    [pageSize]="20"
+    [pageSizeOptions]="[5, 10, 20]"
+    showFirstLastButtons
+  >
+  </mat-paginator>
+</div>
